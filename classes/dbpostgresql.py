@@ -19,8 +19,13 @@ class DBPostgresql:
         self._cur = self._connect.cursor()
         self._launch_query('SELECT 1')
         print('Conexión establecida con éxito')
-
+            
         self._create_table()
+
+    def __del__(self):
+        self._connect.close()
+        self._cur.close()
+
 
     def _create_table(self):
 
@@ -48,6 +53,7 @@ class DBPostgresql:
 
         self._launch_query(query)
 
+
     def _launch_query(self, query):
         print(query)
         self._cur.execute(query)
@@ -55,9 +61,6 @@ class DBPostgresql:
         if not matches:
             self._connect.commit()
 
-    def __del__(self):
-        self._connect.close()
-        self._cur.close()
 
     def insert(self, data):
 
@@ -67,6 +70,13 @@ class DBPostgresql:
         self._launch_query(query)
 
         return True
+
+
+    def delete(self, id_object):
+        query = f'DELETE FROM public.{self._table_name} WHERE id = {id_object};'
+
+        self._launch_query(query)
+
 
     def update(self, id_object, data):
 
@@ -78,10 +88,6 @@ class DBPostgresql:
         query = f'UPDATE public.{self._table_name} SET {", ".join(list_update)} WHERE id = {id_object};'
         self._launch_query(query)
 
-    def delete(self, id_object):
-        query = f'DELETE FROM public.{self._table_name} WHERE id = {id_object};'
-
-        self._launch_query(query)
 
     def get_by_id(self, id_object):
         query = f'SELECT * FROM public.{self._table_name} WHERE id = {id_object};'
@@ -97,6 +103,7 @@ class DBPostgresql:
             data[table_keys[key]] = value
 
         return data
+
 
     def get_by_filters(self, filters=None):
 
@@ -127,6 +134,7 @@ class DBPostgresql:
             list_data.append(data)
 
         return list_data
+
 
     def get_all(self):
         return self.get_by_filters()

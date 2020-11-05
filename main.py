@@ -124,15 +124,15 @@ def search_contact():
     print('Introduce un nombre (vacío para usar otro filtro):')
     nombre = input()
     if nombre:
-        filters['NAME'] = nombre
+        filters['name'] = nombre
     print('Introduce un apellido (vacío para usar otro filtro):')
     apellidos = input()
     if apellidos:
-        filters['SURNAME'] = apellidos
+        filters['surname'] = apellidos
     print('Introduce un email (vacío para usar otro filtro):')
     email = input()
     if email:
-        filters['EMAIL'] = email
+        filters['email'] = email
 
     try:
         list_contacts = db.search_contacts(filters)
@@ -171,7 +171,7 @@ def check_contact_data(message, data_name, force = True):
         return input_data
     except ValueError as err:
         print(err)
-        check_contact_data(message, data_name) 
+        return check_contact_data(message, data_name, force)
 
 def update_contact():
 
@@ -183,19 +183,19 @@ def update_contact():
     data = {}
     nombre = check_contact_data('Introduce un nombre (vacío para mantener el nombre actual):', 'name', False)
     if nombre:
-        data['NAME'] = nombre
+        data['name'] = nombre
     apellidos = check_contact_data('Introduce un apellido (vacío para mantener los apellidos actuales):', 'surname', False)
     if apellidos:
-        data['SURNAME'] = apellidos
+        data['surname'] = apellidos
     email = check_contact_data('Introduce un email (vacío para mantener el email actual):', 'email', False)
     if email:
-        data['EMAIL'] = email
+        data['email'] = email
     phone = check_contact_data('Introduce un teléfono (vacío para mantener el teléfono actual):', 'phone', False)
     if phone:
-        data['PHONE'] = phone
+        data['phone'] = phone
     birthday = check_contact_data('Introduce una fecha de nacimiento YYYY-MM-DD (vacío para mantener la fecha actual):', 'birthday', False)
     if birthday:
-        data['BIRTHDAY'] = birthday
+        data['birthday'] = birthday
     
     try:
         res = db.update(id_object, data)
