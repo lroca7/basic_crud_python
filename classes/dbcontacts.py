@@ -60,5 +60,17 @@ class DBContacts(DBbyCSV):
 
         return object_contacts
 
+    def update_contact(self, id_object, data):
+        if not id_object:
+            raise ValueError('Debes envíar el id del contacto')
+        if not data:
+            raise ValueError('Debes envíar al menos un parámetro a actualizar')
+        self.update(id_object, data)
+
+    def delete_contact(self, id_object):
+        if not id_object:
+            raise ValueError('Debes envíar el id del contacto')
+        self.delete(id_object)
+
     def __init__(self):
         super().__init__(SCHEMA, 'contacts')

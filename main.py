@@ -161,6 +161,65 @@ def _print_table_contacts(list_contacts):
     print('Pulsa cualquier letra para continuar')
     command = input()
 
+def check_contact_data(message, data_name, force = True):
+    print(message)
+    input_data = input()
+    if not force and not input_data:
+        return
+    try:
+        getattr(validator, f'validate{data_name.capitalize()}')(input_data)
+        return input_data
+    except ValueError as err:
+        print(err)
+        check_contact_data(message, data_name) 
+
+def update_contact():
+
+    list_contacts()
+
+    print('Introduce el id del contacto que quieres actualizar:')
+    id_object = input()
+
+    data = {}
+    nombre = check_contact_data('Introduce un nombre (vacío para mantener el nombre actual):', 'name', False)
+    if nombre:
+        data['NAME'] = nombre
+    apellidos = check_contact_data('Introduce un apellido (vacío para mantener los apellidos actuales):', 'surname', False)
+    if apellidos:
+        data['SURNAME'] = apellidos
+    email = check_contact_data('Introduce un email (vacío para mantener el email actual):', 'email', False)
+    if email:
+        data['EMAIL'] = email
+    phone = check_contact_data('Introduce un teléfono (vacío para mantener el teléfono actual):', 'phone', False)
+    if phone:
+        data['PHONE'] = phone
+    birthday = check_contact_data('Introduce una fecha de nacimiento YYYY-MM-DD (vacío para mantener la fecha actual):', 'birthday', False)
+    if birthday:
+        data['BIRTHDAY'] = birthday
+    
+    try:
+        res = db.update(id_object, data)
+        if res:
+            print('Contacto actualizado con éxito')
+    except Exception as err:
+        print(err)
+        time.sleep(1)
+        update_contact()
+
+def delete_contact():
+    list_contacts()
+
+    print('Introduce el id del contacto que quieres eliminar:')
+    id_object = input()
+    try:
+        res = db.delete(id_object)
+        if res:
+            print('Contacto eliminado con éxito')
+    except Exception as err:
+        print(err)
+        time.sleep(1)
+        delete_contact()
+
 
 def run():
     print_options()
@@ -173,9 +232,9 @@ def run():
     elif command == 'L':
         list_contacts()
     elif command == 'M':
-        pass
+        update_contact()
     elif command == 'E':
-        pass
+        delete_contact()
     elif command == 'B':
         search_contact()
         pass

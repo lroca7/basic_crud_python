@@ -5,7 +5,6 @@ from environs import Env
 class DBPostgresql:
 
     def __init__(self, schema, table_name):
-        print('hola q tal')
         self._table_name = table_name
         self._schema = schema
         env = Env()
